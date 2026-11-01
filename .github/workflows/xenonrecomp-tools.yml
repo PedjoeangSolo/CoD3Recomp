@@ -1,0 +1,58 @@
+name: Build XenonRecomp host tools
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - android/arm64-port
+    paths:
+      - ".github/workflows/xenonrecomp-tools.yml"
+      - "tools/XenonRecomp/**"
+      - ".gitmodules"
+
+permissions:
+  contents: read
+
+jobs:
+  build-tools:
+    name: Build XenonRecomp and XenonAnalyse on Linux
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout repository and submodules
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Install Clang and CMake
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y clang-18 lld-18 cmake ninja-build
+
+      - name: Configure XenonRecomp
+        run: |
+          cmake -S tools/XenonRecomp -B build/xenon-tools -G Ninja \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DCMAKE_C_COMPILER=clang-18 \
+            -DCMAKE_CXX_COMPILER=clang++-18 \
+            -DCMAKE_EXE_LINKER_FLAGS="-lstdc++"
+
+      - name: Build host-side recompiler tools
+        run: |
+          cmake --build build/xenon-tools --target XenonRecomp XenonAnalyse --parallel 2
+
+      - name: Verify binaries
+        run: |
+          test -x build/xenon-tools/XenonRecomp/XenonRecomp
+          test -x build/xenon-tools/XenonAnalyse/XenonAnalyse
+          build/xenon-tools/XenonRecomp/XenonRecomp --help || true
+          file build/xenon-tools/XenonRecomp/XenonRecomp
+          file build/xenon-tools/XenonAnalyse/XenonAnalyse
+
+      - name: Upload host tools
+        uses: actions/upload-artifact@v4
+        with:
+          name: xenonrecomp-linux-tools
+          path: |
+            build/xenon-tools/XenonRecomp/XenonRecomp
+            build/xenon-tools/XenonAnalyse/XenonAnalyse
+          retention-days: 7
