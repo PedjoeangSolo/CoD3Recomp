@@ -18,6 +18,14 @@ bool run_guest_memory_tests() noexcept {
         if (!mem.read64be(0x1008, d) || d != 0x0123456789ABCDEFULL) return false;
         if (mem.contains(0x0FFF, 1) || mem.contains(0x1040, 1)) return false;
         if (mem.read32be(0x103F, w)) return false;
+
+        // A guest address range must never wrap around the 32-bit address space.
+        GuestMemory high_memory(16, 0xFFFFFFF0u);
+        if (high_memory.contains(0xFFFFFFFCu, 8)) return false;
+        if (high_memory.read64be(0xFFFFFFFCu, d)) return false;
+        if (high_memory.write64be(0xFFFFFFFCu, 0x0123456789ABCDEFULL)) return false;
+        if (!high_memory.write32be(0xFFFFFFF8u, 0xAABBCCDDu)) return false;
+
         CpuState state{};
         state.pc = 0x82000000u;
         state.gpr[3] = 0xA5A5u;
