@@ -10,11 +10,11 @@ Java_com_pedjoeangsolo_cod3recomp_MainActivity_nativeStatus(JNIEnv* env, jclass)
         "Native library: LOADED\n"
         "JNI bridge: OK\n"
         "Target ABI: arm64-v8a\n"
-        "Guest CPU state: INITIALIZED\n"
-        "Guest memory tests: " + std::string(tests_ok ? "PASS" : "FAIL") + "\n\n"
-        "Stage: PowerPC guest memory foundation\n"
-        "Big-endian 16/32/64-bit access and bounds checks tested.\n\n"
-        "STATUS: RUNTIME FOUNDATION ONLY\n"
-        "PowerPC instruction execution, Xbox kernel, renderer, and game boot are not implemented yet.";
+        "PPC state prototype: INITIALIZED\n"
+        "Guest memory prototype tests: " + std::string(tests_ok ? "PASS" : "FAIL") + "\n\n"
+        "Stage: Android ARM64 compatibility foundation\n"
+        "Big-endian scalar access, bounds checks, and 32-bit address-wrap checks tested.\n\n"
+        "IMPORTANT: This prototype is not XenonRecomp's PPCContext or a game runtime.\n"
+        "PowerPC execution, Xbox kernel, graphics/audio, and game boot are not implemented.";
     return env->NewStringUTF(status.c_str());
 }
