@@ -5,6 +5,7 @@
 #include <cstring>
 #include <set>
 #include <string>
+#include <sys/stat.h>
 #include <vector>
 #include <unistd.h>
 
