@@ -8,7 +8,9 @@ add_library(cod3android SHARED
     ppc_context_probe.cpp
 )
 
-set(XENON_RECOMP_ROOT "${CMAKE_SOURCE_DIR}/tools/XenonRecomp")
+# CMakeLists.txt lives in app/src/main/cpp; walk back to repository root.
+set(REPOSITORY_ROOT "${CMAKE_CURRENT_SOURCE_DIR}/../../../..")
+set(XENON_RECOMP_ROOT "${REPOSITORY_ROOT}/tools/XenonRecomp")
 target_include_directories(cod3android PRIVATE
     "${XENON_RECOMP_ROOT}/XenonUtils"
     "${XENON_RECOMP_ROOT}/thirdparty/simde"
