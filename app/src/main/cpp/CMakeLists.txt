@@ -6,6 +6,7 @@ add_library(cod3android SHARED
     ppc_guest_memory.cpp
     ppc_runtime_tests.cpp
     ppc_context_probe.cpp
+    iso_boot_probe.cpp
 )
 
 # CMakeLists.txt lives in app/src/main/cpp; walk back to repository root.
